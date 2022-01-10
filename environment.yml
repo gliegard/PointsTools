@@ -3,5 +3,5 @@ channels:
   - conda-forge
 dependencies:
   - python=3.8
-  - entwine=2.1.0
-  - pdal=2.2.0
+  - entwine
+  - pdal
