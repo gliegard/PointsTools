@@ -5,6 +5,7 @@ const path = require('path');
 const { spawn, exec, execSync } = require('child_process');
 const parse = require('json-templates');
 const jsonPdalTemplate = require('./pdalPipelineTemplate.json');
+const jsonPdalTemplateColor = require('./pdalPipelineTemplateColor.json');
 const commandExistsSync = require('command-exists').sync;
 
 const itowns = require('itowns');
@@ -27,8 +28,6 @@ if (mandatoryCommands.some(command => checkCommand(command) == false)) {
     return;
 }
 
-const template = parse(jsonPdalTemplate);
-
 const args = process.argv.slice(2);
 const processFolder = process.cwd();
 
@@ -40,6 +39,15 @@ const config = require(configFile);
 const inputFolder = path.resolve(processFolder, config.inputFolder);
 const outputFolder = path.resolve(processFolder, config.outputFolder);
 const { crs, defs } = config.projection;
+
+var template;
+if (config.colorize) {
+    console.log('\n * Colorize: True');
+    template = parse(jsonPdalTemplateColor);
+} else {
+    console.log('\n * Colorize: False');
+    template = parse(jsonPdalTemplate);
+}
 
 if (!crs) {
     throw new Error('No projection crs');
@@ -60,7 +68,7 @@ const nodesFiles = fs.readFileSync(path.resolve(pathMetadata, './pdalInfoFiles.j
 
 const nodes = JSON.parse(nodesFiles);
 
-console.log('\n * Files count :\t', nodes.length);
+console.log(' * Files count :\t', nodes.length);
 
 let maxx = -Infinity;
 let maxy = -Infinity;

@@ -1,0 +1,30 @@
+{
+    "pipeline" : [
+        {
+            "type" : "readers.las",
+            "spatialreference":"{{inCrs}}"
+        },
+        {
+            "type":"filters.reprojection",
+            "in_srs":"{{inCrs}}",
+            "out_srs":"EPSG:3857"
+        },
+        {
+          "type":"filters.colorization",
+          "raster":"wms.xml"
+        },
+        {
+            "type":"filters.reprojection",
+            "in_srs":"EPSG:3857",
+            "out_srs":"EPSG:4978"
+        },
+        {
+            "type":"filters.transformation",
+            "matrix":"{{matrixTransformation}}"
+
+        },
+        {
+            "type" : "writers.las"
+        }
+    ]
+}
