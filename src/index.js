@@ -174,11 +174,6 @@ lsToLaz4978.on('close', (code) => {
     // stop the progress bar
     barPdal.stop();
 
-    const barEpt = new cliProgress.SingleBar({
-    format: 'Convert to ept 4978 [{bar}] {percentage}% | ETA: {eta}s',
-    forceRedraw: true }, cliProgress.Presets.shades_classic);
-    barEpt.start(100, 0);
-
     const ept4978Path = path.resolve(outputFolder, './EPT_4978/');
     fs.mkdirSync(ept4978Path, { recursive: true })
 
@@ -193,14 +188,9 @@ lsToLaz4978.on('close', (code) => {
     fs.writeFileSync(configEPTFile, JSON.stringify(configEpt, null, 2));
 
     const lsEPT = spawn('entwine',  ['build', '-c', configEPTFile]);
-    progress = 0;
-    lsEPT.stdout.on('data', (data) => {
-        const m = data.toString().match(/(?<=-)(.*)(?=%)/gm);
 
-        if (m && m[0]) {
-            progress = parseInt(m[0]);
-            barEpt.update(progress);
-        }
+    lsEPT.stdout.on('data', (data) => {
+        console.log(data.toString());
     });
     lsEPT.stderr.on('data', (data) => {
         console.log('stderr.on', data.toString());
@@ -209,8 +199,4 @@ lsToLaz4978.on('close', (code) => {
     lsEPT.on('error', (error) => {
         console.log('error', error);
     });
-    lsEPT.on('close', (code) => {
-        barEpt.stop();
-    });
-
 });
