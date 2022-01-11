@@ -187,7 +187,7 @@ lsToLaz4978.on('close', (code) => {
     const configEpt = {
         input: pathOut4978,
         output: ept4978Path,
-        threads: [1, 1],
+        threads: 10
     }
 
     fs.writeFileSync(configEPTFile, JSON.stringify(configEpt, null, 2));
